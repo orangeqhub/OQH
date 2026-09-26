@@ -1,0 +1,38 @@
+/* Speech bubble next to the robot pointer. Positioned by JS (transform). */
+.cursor-bubble {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: var(--z-cursor);
+  pointer-events: none;
+  will-change: transform;
+}
+
+.cursor-bubble span {
+  display: block;
+  padding: 0.45rem 0.85rem;
+  border-radius: 12px 12px 12px 3px;
+  background: var(--grad-accent);
+  color: #1a0a00;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  box-shadow: 0 10px 30px -8px rgba(255, 122, 26, 0.7);
+  opacity: 0;
+  transform: scale(0.6);
+  transform-origin: 0 0;
+  transition:
+    opacity var(--dur-fast) linear,
+    transform var(--dur-base) var(--ease-out);
+}
+
+.cursor-bubble.is-on span {
+  opacity: 1;
+  transform: none;
+}
+
+.cursor-bubble:not(.is-on) span:empty {
+  padding: 0;
+}

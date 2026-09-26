@@ -1,0 +1,155 @@
+.fdev {
+  position: absolute;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* ---- Laptop -------------------------------------------------------------- */
+.fdev__laptop {
+  position: relative;
+  width: 100%;
+  transform-style: preserve-3d;
+  transform: rotateX(-12deg) rotateY(-16deg);
+}
+
+.fdev__lid {
+  position: relative;
+  aspect-ratio: 16 / 10.4;
+  transform-origin: 50% 100%;
+  transform: rotateX(-4deg);
+  transform-style: preserve-3d;
+}
+
+.fdev__bezel {
+  position: absolute;
+  inset: 0;
+  padding: 3.2% 3.2% 4.5%;
+  border-radius: 14px 14px 4px 4px;
+  background: linear-gradient(180deg, #1c212c, #0d1017);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+    0 0 0 1.5px #2c3240,
+    0 30px 70px -20px rgba(0, 0, 0, 0.9),
+    0 0 90px -20px rgba(255, 122, 26, 0.35);
+  overflow: hidden;
+}
+
+.fdev__screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #05070b;
+}
+
+.fdev__deck {
+  position: relative;
+  height: 0;
+  padding-bottom: 58%;
+  margin: 0 -7%;
+  transform-origin: 50% 0;
+  transform: rotateX(78deg);
+  border-radius: 4px 4px 18px 18px;
+  background: linear-gradient(180deg, #3a404e, #1b1f28 70%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+.fdev__keys {
+  position: absolute;
+  left: 11%;
+  right: 11%;
+  top: 8%;
+  height: 46%;
+  border-radius: 6px;
+  background:
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.55) 0 5.4%, transparent 5.4% 6.6%),
+    repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.55) 0 14%, transparent 14% 20%);
+  opacity: 0.7;
+  box-shadow: 0 0 22px rgba(255, 122, 26, 0.18);
+}
+
+.fdev__pad {
+  position: absolute;
+  left: 36%;
+  right: 36%;
+  top: 60%;
+  height: 30%;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.07);
+}
+
+.fdev__shadow {
+  position: absolute;
+  left: -4%;
+  right: -4%;
+  bottom: -6%;
+  height: 18%;
+  background: radial-gradient(50% 50% at 50% 50%, rgba(0, 0, 0, 0.8), transparent 70%);
+  transform: translateZ(-60px);
+  filter: blur(8px);
+}
+
+/* ---- Phone --------------------------------------------------------------- */
+.fdev__phone {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 9 / 19;
+  padding: 5%;
+  border-radius: 18% / 8.5%;
+  background: linear-gradient(145deg, #3a404e, #13161d 40%, #262b36);
+  box-shadow:
+    inset 0 0 0 1.5px rgba(255, 255, 255, 0.18),
+    0 30px 60px -18px rgba(0, 0, 0, 0.9),
+    0 0 50px -14px rgba(255, 122, 26, 0.4);
+  transform: var(--panel-rot, rotateY(18deg) rotateZ(-6deg));
+  animation: panelFloat 7s ease-in-out infinite alternate;
+}
+
+.fdev__phone-screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 14% / 6.5%;
+  overflow: hidden;
+  background: #05070b;
+}
+
+/* The phone shows a single app screen, not the dual-phone mock. */
+.fdev__phone-screen .m-mob {
+  background: linear-gradient(180deg, #10151f, #080b12);
+}
+.fdev__phone-screen .m-mob__phone {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+  transform: none;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  font-size: 2.2em;
+}
+.fdev__phone-screen .m-mob__phone--back,
+.fdev__phone-screen .m-mob__notch {
+  display: none;
+}
+
+.fdev__island {
+  position: absolute;
+  top: 3.6%;
+  left: 50%;
+  width: 30%;
+  height: 3%;
+  border-radius: 99px;
+  background: #000;
+  transform: translateX(-50%);
+}
+
+.fdev__glare {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: linear-gradient(120deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0) 32%);
+}

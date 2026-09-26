@@ -1,0 +1,128 @@
+.fpanel {
+  position: absolute;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* Rotation lives on the body so the parallax translate on .fpanel stays independent. */
+.fpanel__body {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem;
+  border-radius: 16px;
+  background: linear-gradient(150deg, rgba(40, 48, 70, 0.55), rgba(12, 16, 26, 0.55));
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+  backdrop-filter: blur(14px) saturate(150%);
+  box-shadow:
+    0 40px 80px -30px rgba(0, 0, 0, 0.9),
+    0 0 0 1px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    inset 0 0 30px rgba(255, 140, 50, 0.06),
+    0 0 40px -8px rgba(255, 122, 26, 0.28);
+  transform: var(--panel-rot, none);
+  transform-origin: 50% 50%;
+  animation: panelFloat var(--float-dur, 9s) ease-in-out infinite alternate;
+  animation-delay: var(--float-delay, 0s);
+}
+
+/* Warm rim light along the lower edge, like light from the studio below. */
+.fpanel__body::after {
+  content: '';
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  bottom: -1px;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255, 160, 77, 0.95), transparent);
+  filter: blur(0.5px);
+  box-shadow: 0 0 18px rgba(255, 122, 26, 0.9);
+}
+
+.fpanel__head {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.35rem 0.45rem 0.55rem;
+}
+
+.fpanel__icon {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 7px;
+  color: var(--c-accent-hi);
+  background: rgba(255, 122, 26, 0.12);
+  box-shadow: inset 0 0 0 1px rgba(255, 160, 77, 0.4);
+}
+
+.fpanel__title {
+  font-family: var(--font-display);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--c-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fpanel__screen {
+  position: relative;
+  flex: 1;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  background: #070a11;
+}
+
+.fpanel__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+}
+
+/* Diagonal glass reflection that slides with the pointer (see HeroStage). */
+.fpanel__reflect {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    rgba(255, 255, 255, 0) 30%,
+    rgba(255, 255, 255, 0.14) 44%,
+    rgba(255, 255, 255, 0.03) 50%,
+    rgba(255, 255, 255, 0) 60%
+  );
+  background-size: 250% 100%;
+  background-position: calc(50% + var(--sheen, 0) * 40%) 0;
+  mix-blend-mode: screen;
+}
+
+@keyframes panelFloat {
+  from {
+    translate: 0 -6px;
+  }
+  to {
+    translate: 0 8px;
+  }
+}
+
+@media (max-width: 760px) {
+  .fpanel--desk {
+    display: none;
+  }
+  .fpanel__body {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background: linear-gradient(150deg, rgba(30, 36, 54, 0.92), rgba(12, 16, 26, 0.92));
+  }
+}

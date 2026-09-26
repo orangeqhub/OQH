@@ -1,0 +1,42 @@
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.logo img {
+  display: block;
+  height: auto;
+}
+
+.logo__mark {
+  width: 82px;
+  filter: drop-shadow(0 0 14px rgba(255, 122, 26, 0.3));
+  transition: transform var(--dur-slow) var(--ease-out), filter var(--dur-slow);
+}
+
+.logo:hover .logo__mark {
+  transform: scale(1.05);
+  filter: drop-shadow(0 0 20px rgba(255, 122, 26, 0.55));
+}
+
+.logo__word {
+  width: 150px;
+}
+
+.logo--mark .logo__mark {
+  width: 110px;
+}
+
+.logo--full img {
+  width: 220px;
+}
+
+@media (max-width: 420px) {
+  .logo__mark {
+    width: 66px;
+  }
+  .logo__word {
+    width: 118px;
+  }
+}

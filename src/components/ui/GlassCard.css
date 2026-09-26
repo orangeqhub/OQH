@@ -1,0 +1,33 @@
+.gcard {
+  --mx: 50%;
+  --my: 0%;
+  position: relative;
+  padding: 1.75rem;
+  border-radius: var(--r-lg);
+  background: var(--glass-bg-strong);
+  border: 1px solid var(--glass-border);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  box-shadow: var(--shadow-md), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+  isolation: isolate;
+  transform-style: preserve-3d;
+  transition: border-color var(--dur-slow) var(--ease-out), box-shadow var(--dur-slow) var(--ease-out);
+}
+
+.gcard:hover {
+  border-color: rgba(255, 160, 77, 0.3);
+  box-shadow: var(--shadow-lg), 0 0 50px -24px rgba(255, 122, 26, 0.6);
+}
+
+.gcard__light {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(360px circle at var(--mx) var(--my), rgba(255, 122, 26, 0.16), transparent 60%);
+  opacity: 0;
+  transition: opacity var(--dur-slow);
+}
+.gcard:hover .gcard__light {
+  opacity: 1;
+}

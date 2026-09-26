@@ -1,0 +1,52 @@
+.scene {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-scene);
+  pointer-events: none;
+  background: var(--c-void);
+}
+
+.scene__canvas {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1.6s var(--ease-out);
+}
+.scene__canvas.is-ready {
+  opacity: 1;
+}
+
+/* Painted studio: warm ceiling light, horizon glow, floor reflection. */
+.scene__fallback {
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(90deg, transparent 0 12vw, rgba(255, 170, 100, 0.07) 12vw calc(12vw + 2px)) 0 0 / 100% 18vh no-repeat,
+    radial-gradient(60% 30% at 60% 48%, rgba(255, 122, 26, 0.22), transparent 70%),
+    radial-gradient(40% 25% at 25% 55%, rgba(106, 168, 255, 0.1), transparent 70%),
+    linear-gradient(180deg, #07090f 0%, #0b0f18 45%, #120d0a 52%, #06070a 100%);
+}
+
+/* Readability: darken behind the left text column and the lower edge. */
+.scene__vignette {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(5, 7, 11, 0.86) 0%, rgba(5, 7, 11, 0.55) 34%, rgba(5, 7, 11, 0) 62%),
+    linear-gradient(180deg, rgba(5, 7, 11, 0.55) 0%, rgba(5, 7, 11, 0) 18%, rgba(5, 7, 11, 0) 70%, rgba(5, 7, 11, 0.7) 100%),
+    radial-gradient(120% 90% at 60% 50%, transparent 55%, rgba(0, 0, 0, 0.55) 100%);
+}
+
+/* Phones: text runs full-width over the scene, so the studio sits further back */
+@media (max-width: 760px) {
+  .scene__vignette {
+    background: linear-gradient(180deg, rgba(5, 7, 11, 0.72) 0%, rgba(5, 7, 11, 0.6) 45%, rgba(5, 7, 11, 0.85) 100%);
+  }
+}
+
+/* Phones: keep the studio as atmosphere, never competing with text */
+@media (max-width: 760px) {
+  .scene__canvas.is-ready {
+    opacity: 0.6;
+  }
+}

@@ -1,0 +1,159 @@
+.hscene {
+  position: relative;
+  width: 100%;
+  perspective: 1600px;
+  perspective-origin: 40% 40%;
+  pointer-events: none;
+}
+
+.hscene__cam {
+  transform-style: preserve-3d;
+  will-change: transform, opacity;
+}
+
+.hscene__stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1.12 / 1;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.hscene__glow {
+  position: absolute;
+  left: 20%;
+  top: 30%;
+  width: 60%;
+  height: 50%;
+  background: radial-gradient(50% 50% at 50% 50%, rgba(255, 122, 26, 0.35), transparent 70%);
+  filter: blur(40px);
+  transform: translateZ(-200px);
+}
+
+/* Items: outer div = parallax translate (JS), inner = placement + rotation. */
+.hscene__item {
+  position: absolute;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.hscene__laptop {
+  left: 20%;
+  top: 30%;
+  width: 54%;
+  --panel-rot: none;
+}
+
+.hscene__phone {
+  left: 58%;
+  top: 0%;
+  width: 15%;
+}
+.hscene__phone .fdev__phone {
+  --panel-rot: rotateY(-16deg) rotateZ(5deg);
+}
+
+.hscene__p {
+  --float-dur: 9s;
+}
+
+.hscene__p--software {
+  left: 0%;
+  top: 6%;
+  width: 34%;
+  height: 26%;
+  --panel-rot: rotateY(24deg) rotateX(4deg);
+  --float-delay: -2s;
+}
+
+.hscene__p--marketing {
+  left: 68%;
+  top: 10%;
+  width: 32%;
+  height: 27%;
+  --panel-rot: rotateY(-26deg) rotateX(4deg);
+  --float-delay: -4s;
+}
+
+.hscene__p--design {
+  left: 74%;
+  top: 46%;
+  width: 26%;
+  height: 24%;
+  --panel-rot: rotateY(-32deg);
+  --float-delay: -6s;
+}
+
+.hscene__p--video {
+  left: 44%;
+  top: 70%;
+  width: 34%;
+  height: 29%;
+  --panel-rot: rotateY(-10deg) rotateX(10deg);
+  --float-delay: -1s;
+  --float-dur: 7s;
+}
+
+.hscene__p--uiux {
+  left: -2%;
+  top: 60%;
+  width: 30%;
+  height: 24%;
+  --panel-rot: rotateY(26deg) rotateX(6deg);
+  --float-delay: -3s;
+}
+
+.hscene__p--motion {
+  left: 34%;
+  top: -4%;
+  width: 22%;
+  height: 20%;
+  --panel-rot: rotateY(8deg) rotateX(-4deg);
+  --float-delay: -5s;
+  opacity: 0.8;
+  filter: blur(0.4px);
+}
+
+@media (max-width: 1180px) {
+  .hscene__p--design,
+  .hscene__p--motion {
+    display: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .hscene__desk {
+    display: none;
+  }
+  .hscene__stage {
+    aspect-ratio: 1.25 / 1;
+  }
+  .hscene__laptop {
+    left: 12%;
+    top: 22%;
+    width: 70%;
+  }
+  .hscene__phone {
+    left: 72%;
+    top: 6%;
+    width: 20%;
+  }
+  .hscene__p--software {
+    left: -2%;
+    top: 0%;
+    width: 44%;
+    height: 30%;
+  }
+  .hscene__p--marketing {
+    display: none;
+  }
+  .hscene__p--video {
+    left: 44%;
+    top: 66%;
+    width: 50%;
+    height: 34%;
+  }
+  .fpanel__title {
+    font-size: 0.56rem;
+  }
+}

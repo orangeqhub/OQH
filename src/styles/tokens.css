@@ -1,0 +1,117 @@
+/* ==========================================================================
+   Orange Quantum Hub — design tokens
+   Dark + white + orange. Orange is an accent, never a surface.
+   Mirror of the motion values lives in src/lib/tokens.ts.
+   ========================================================================== */
+
+:root {
+  /* ---- Surfaces ---------------------------------------------------------- */
+  --c-void: #05070b;          /* deepest background */
+  --c-ink: #080b12;           /* page background */
+  --c-navy: #0b1120;          /* raised background */
+  --c-charcoal: #11151e;      /* panels */
+  --c-graphite: #1a1f2b;      /* borders on dark */
+
+  /* ---- Text -------------------------------------------------------------- */
+  --c-text: #f4f2ee;
+  --c-text-soft: rgba(244, 242, 238, 0.72);
+  --c-text-mute: rgba(244, 242, 238, 0.5);
+  --c-text-faint: rgba(244, 242, 238, 0.32);
+
+  /* ---- Accent ------------------------------------------------------------ */
+  --c-accent: #ff7a1a;
+  --c-accent-hi: #ffa04d;
+  --c-amber: #ffb547;
+  --c-accent-deep: #d95a00;
+  --c-accent-glow: rgba(255, 122, 26, 0.45);
+  --c-accent-wash: rgba(255, 122, 26, 0.1);
+  --grad-accent: linear-gradient(100deg, #ff6a00 0%, #ff8a2b 45%, #ffb547 100%);
+
+  /* Secondary light — used sparingly, never louder than orange */
+  --c-cool: #6aa8ff;
+  --c-violet: #8f7bff;
+  --c-cyan: #4fd6e6;
+
+  /* ---- Glass ------------------------------------------------------------- */
+  --glass-bg: linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.02));
+  --glass-bg-strong: linear-gradient(145deg, rgba(22, 27, 40, 0.86), rgba(10, 13, 21, 0.78));
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-border-hi: rgba(255, 255, 255, 0.2);
+  --glass-blur: blur(18px) saturate(140%);
+  --glass-sheen: linear-gradient(115deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0) 38%);
+
+  /* ---- Shadows ----------------------------------------------------------- */
+  --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 18px 40px -12px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 40px 90px -20px rgba(0, 0, 0, 0.75);
+  --shadow-accent: 0 12px 40px -10px rgba(255, 122, 26, 0.55);
+  --shadow-panel: 0 30px 80px -24px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.06) inset;
+
+  /* ---- Typography -------------------------------------------------------- */
+  --font-display: 'Sora', 'Inter', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'Cascadia Code', Consolas, monospace;
+
+  --fs-hero: clamp(2.6rem, 1.2rem + 5.6vw, 6.4rem);
+  --fs-h1: clamp(2.3rem, 1.2rem + 4.2vw, 5rem);
+  --fs-h2: clamp(1.9rem, 1.1rem + 2.8vw, 3.6rem);
+  --fs-h3: clamp(1.25rem, 1rem + 0.8vw, 1.7rem);
+  --fs-lead: clamp(1.02rem, 0.95rem + 0.35vw, 1.22rem);
+  --fs-body: 1rem;
+  --fs-small: 0.875rem;
+  --fs-eyebrow: 0.72rem;
+
+  --lh-tight: 0.98;
+  --lh-snug: 1.15;
+  --lh-body: 1.65;
+  --ls-tight: -0.035em;
+  --ls-display: -0.025em;
+  --ls-eyebrow: 0.32em;
+
+  /* ---- Spacing ----------------------------------------------------------- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+  --space-section: clamp(5rem, 3rem + 8vw, 11rem);
+  --gutter: clamp(1rem, 0.4rem + 3vw, 4rem);
+  --container: 1440px;
+
+  /* ---- Radius ------------------------------------------------------------ */
+  --r-xs: 6px;
+  --r-sm: 10px;
+  --r-md: 16px;
+  --r-lg: 22px;
+  --r-xl: 30px;
+  --r-pill: 999px;
+
+  /* ---- Motion ------------------------------------------------------------ */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);        /* expo-out: cinematic settle */
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: cubic-bezier(0.34, 1.3, 0.64, 1);   /* soft overshoot, not bouncy */
+  --dur-fast: 180ms;
+  --dur-base: 360ms;
+  --dur-slow: 700ms;
+  --dur-cine: 1200ms;
+
+  /* ---- Layers ------------------------------------------------------------ */
+  --z-scene: 0;
+  --z-content: 1;
+  --z-nav: 50;
+  --z-transition: 80;
+  --z-cursor: 100;
+
+  --nav-h: 84px;
+}
+
+@media (max-width: 760px) {
+  :root {
+    --nav-h: 68px;
+    --glass-blur: blur(12px) saturate(130%);
+  }
+}

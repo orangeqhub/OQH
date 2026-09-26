@@ -1,0 +1,291 @@
+/* ==========================================================================
+   Base: reset, typography, layout primitives, utilities
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  background: var(--c-void);
+  color-scheme: dark;
+  /* 3D-rotated panels can poke past the viewport edge; clip (unlike hidden)
+     doesn't create a scroll container, so position: sticky keeps working. */
+  overflow-x: clip;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--c-ink);
+  color: var(--c-text);
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
+}
+
+img,
+svg,
+video,
+canvas {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  background: none;
+  border: 0;
+  padding: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+ul,
+ol,
+figure {
+  margin: 0;
+}
+
+ul[role='list'],
+ol[role='list'] {
+  list-style: none;
+  padding: 0;
+}
+
+::selection {
+  background: var(--c-accent);
+  color: #120800;
+}
+
+:focus-visible {
+  outline: 2px solid var(--c-accent-hi);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Robot pointer — a native cursor, so it never lags. Hotspot = antenna tip.
+   Enabled on fine pointers only (class set by CustomCursor). */
+html.has-custom-cursor,
+html.has-custom-cursor * {
+  cursor: url('/cursor/robot.svg') 3 3, auto;
+}
+html.has-custom-cursor :is(a, button, label, select, summary, [role='button'], [data-cursor]),
+html.has-custom-cursor :is(a, button, label, select, summary, [role='button'], [data-cursor]) * {
+  cursor: url('/cursor/robot-hover.svg') 3 3, pointer;
+}
+html.has-custom-cursor :is(input:not([type='radio']):not([type='checkbox']), textarea) {
+  cursor: text;
+}
+html.has-custom-cursor :disabled {
+  cursor: not-allowed;
+}
+
+/* ---- Typography ---------------------------------------------------------- */
+
+.display {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: var(--ls-tight);
+  line-height: var(--lh-tight);
+}
+
+.h1 {
+  font-family: var(--font-display);
+  font-size: var(--fs-h1);
+  font-weight: 600;
+  letter-spacing: var(--ls-tight);
+  line-height: 1.02;
+}
+
+.h2 {
+  font-family: var(--font-display);
+  font-size: var(--fs-h2);
+  font-weight: 600;
+  letter-spacing: var(--ls-display);
+  line-height: 1.06;
+}
+
+.h3 {
+  font-family: var(--font-display);
+  font-size: var(--fs-h3);
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  line-height: var(--lh-snug);
+}
+
+.lead {
+  font-size: var(--fs-lead);
+  color: var(--c-text-soft);
+  line-height: 1.6;
+  max-width: 38em;
+}
+
+.muted {
+  color: var(--c-text-mute);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75em;
+  font-family: var(--font-body);
+  font-size: var(--fs-eyebrow);
+  font-weight: 600;
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+  color: var(--c-text-mute);
+}
+
+.eyebrow--accent {
+  color: var(--c-accent-hi);
+}
+
+.eyebrow__dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--c-accent);
+  box-shadow: 0 0 10px var(--c-accent);
+}
+
+.accent-text {
+  background: var(--grad-accent);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ---- Layout -------------------------------------------------------------- */
+
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.section {
+  position: relative;
+  padding-block: var(--space-section);
+}
+
+.stack > * + * {
+  margin-top: var(--space-5);
+}
+
+.sr-only {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 200;
+  padding: 0.7rem 1.1rem;
+  background: var(--c-accent);
+  color: #120800;
+  border-radius: var(--r-pill);
+  font-weight: 600;
+  transform: translateY(-160%);
+  transition: transform var(--dur-base) var(--ease-out);
+}
+.skip-link:focus-visible {
+  transform: none;
+}
+
+/* ---- Glass primitive ------------------------------------------------------ */
+
+.glass {
+  position: relative;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-lg);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  box-shadow: var(--shadow-md);
+}
+
+.glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--glass-sheen);
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+/* Film grain keeps big dark gradients from banding and adds a photographic feel. */
+.grain {
+  position: fixed;
+  inset: -50%;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---- Phones: readable minimums --------------------------------------- */
+@media (max-width: 760px) {
+  .eyebrow {
+    font-size: 0.75rem;
+    letter-spacing: 0.22em;
+  }
+}
