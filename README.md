@@ -12,25 +12,35 @@ npm run preview   # serve the production build
 npm run lint
 ```
 
-Deploying as a static site: configure the host to serve `index.html` for all
-routes (SPA fallback), since routing is client-side (`/about`, `/portfolio/:slug`, …).
+## Contact & WhatsApp
 
-## Configuration
+The business number lives in `src/data/site.ts` (`contact.phone` for display,
+`contact.phoneDigits` = country code + number for links).
 
-Copy `.env.example` to `.env`. The contact and careers forms deliver via
-`VITE_CONTACT_ENDPOINT` (JSON POST) or, failing that, open the visitor's mail
-client addressed to `VITE_CONTACT_EMAIL`. With neither set, the form shows an
-honest "not available" message — it never fakes a successful send.
+- **Contact / Careers forms** validate, then open WhatsApp (`wa.me`) with every
+  filled field pre-typed; the visitor taps *Send* in WhatsApp.
+- **Let's Talk** (header) opens WhatsApp with a pre-filled greeting (`whatsappGreeting`).
+- **Floating buttons** on every page: WhatsApp chat and a `tel:` call link.
+
+Optional `.env` values (`VITE_CONTACT_EMAIL`, `VITE_CONTACT_ADDRESS`) add an
+email/address line to the Contact page and footer.
+
+## Deploying
+
+Client-side routing needs every path served by `index.html`. Included:
+`public/.htaccess` (Apache / Hostinger / cPanel), `public/_redirects`
+(Netlify) and `vercel.json` (Vercel).
 
 ## Content
 
-All copy lives in `src/data/site.ts`. It deliberately contains **no**
-statistics, client names, testimonials, addresses or phone numbers — add real
-ones there. Portfolio entries are marked `kind: 'concept'` (shown with a
-"Concept" badge) until replaced by approved case studies.
+All copy lives in `src/data/site.ts`: services, industries, values, careers and
+the 8 client projects (screenshots in `public/projects/`, captured from the live
+sites). Service photos in `public/services/` are free-licence Unsplash images —
+sources in `public/services/CREDITS.md`. The official logo files are in
+`public/brand/` (`*-on-dark` variants lift the navy text for the dark theme).
 
-The logo in `src/components/ui/Logo.tsx` is a neutral placeholder mark; swap in
-the official asset when available.
+`venkateshinteriors.online` had an expired SSL certificate when captured, so its
+"Visit live site" link is off (`liveLink: false`) until the certificate is renewed.
 
 ## Architecture
 

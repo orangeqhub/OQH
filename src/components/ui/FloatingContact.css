@@ -1,0 +1,110 @@
+.fcontact {
+  position: fixed;
+  right: max(1.1rem, env(safe-area-inset-right));
+  bottom: max(1.1rem, env(safe-area-inset-bottom));
+  /* above page content, below the mobile menu, page curtain and cursor */
+  z-index: 45;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.fcontact__btn {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  color: #fff;
+  box-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transition:
+    transform var(--dur-base) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out);
+}
+
+.fcontact__btn:hover,
+.fcontact__btn:focus-visible {
+  transform: translateY(-3px) scale(1.06);
+}
+
+.fcontact__btn--wa {
+  background: #25d366;
+  box-shadow: 0 12px 30px -8px rgba(37, 211, 102, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+/* Soft attention ring on WhatsApp — static for reduced-motion users */
+.fcontact__btn--wa::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid #25d366;
+  animation: fcontactPulse 2.6s ease-out infinite;
+  pointer-events: none;
+}
+
+.fcontact__btn--call {
+  background: var(--grad-accent);
+  color: #1a0a00;
+  box-shadow: 0 12px 30px -8px rgba(255, 122, 26, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+/* Label slides out to the left on hover (pointer devices only) */
+.fcontact__tip {
+  position: absolute;
+  right: calc(100% + 0.75rem);
+  top: 50%;
+  padding: 0.45rem 0.85rem;
+  border-radius: var(--r-pill);
+  background: rgba(10, 13, 21, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--c-text);
+  font-size: 0.82rem;
+  font-weight: 500;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate(8px, -50%);
+  pointer-events: none;
+  transition:
+    opacity var(--dur-base),
+    transform var(--dur-base) var(--ease-out);
+}
+
+@media (hover: hover) {
+  .fcontact__btn:hover .fcontact__tip,
+  .fcontact__btn:focus-visible .fcontact__tip {
+    opacity: 1;
+    transform: translate(0, -50%);
+  }
+}
+
+@keyframes fcontactPulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  80%,
+  100% {
+    transform: scale(1.45);
+    opacity: 0;
+  }
+}
+
+@media (max-width: 760px) {
+  .fcontact {
+    gap: 0.6rem;
+  }
+  .fcontact__btn {
+    width: 52px;
+    height: 52px;
+  }
+}
+
+/* Phones: let the last lines of the page scroll clear of the floating buttons */
+@media (max-width: 760px) {
+  .footer__bar {
+    padding-right: 76px; /* keep the copyright line out from under the buttons */
+    padding-bottom: calc(var(--space-6) + 12px);
+  }
+}

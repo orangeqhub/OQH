@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
-import { company, contact, nav, services } from '../../data/site'
+import { company, contact, nav, phoneHref, services, whatsappGreeting, whatsappHref } from '../../data/site'
+import { WhatsAppGlyph } from '../ui/WhatsAppGlyph'
 import { Logo } from '../ui/Logo'
 import { Icon } from '../ui/Icon'
 import { PremiumButton } from '../ui/PremiumButton'
@@ -84,7 +85,16 @@ export function Footer({ showCta = true }: { showCta?: boolean }) {
                 </a>
               </li>
             )}
-            {contact.phone && <li className="footer__link">{contact.phone}</li>}
+            <li>
+              <a href={phoneHref} className="footer__link" data-cursor="hover">
+                <Icon name="phone" size={16} /> {contact.phone}
+              </a>
+            </li>
+            <li>
+              <a href={whatsappHref(whatsappGreeting)} target="_blank" rel="noopener noreferrer" className="footer__link" data-cursor="hover">
+                <WhatsAppGlyph size={16} /> WhatsApp us
+              </a>
+            </li>
             {contact.address && (
               <li className="footer__link">
                 <Icon name="pin" size={16} /> {contact.address}

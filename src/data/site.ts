@@ -64,10 +64,24 @@ export const company = {
  * rather than hard-coding unverified details.
  */
 export const contact = {
+  /** Display format of the business number. */
+  phone: '+91 81431 24242',
+  /** International digits only (country code 91 + number) — used for tel: and wa.me links. */
+  phoneDigits: '918143124242',
   email: (import.meta.env.VITE_CONTACT_EMAIL as string | undefined) ?? '',
-  endpoint: (import.meta.env.VITE_CONTACT_ENDPOINT as string | undefined) ?? '',
-  phone: (import.meta.env.VITE_CONTACT_PHONE as string | undefined) ?? '',
   address: (import.meta.env.VITE_CONTACT_ADDRESS as string | undefined) ?? '',
+}
+
+/** Pre-filled greeting used by "Let's Talk" and the floating WhatsApp button. */
+export const whatsappGreeting =
+  "Hi Orange Quantum Hub! I found you through your website and I'd like to talk about a project."
+
+export const phoneHref = `tel:+${contact.phoneDigits}`
+
+/** wa.me link that opens a chat with the business, optionally with a pre-filled message. */
+export function whatsappHref(message?: string) {
+  const base = `https://wa.me/${contact.phoneDigits}`
+  return message ? `${base}?text=${encodeURIComponent(message)}` : base
 }
 
 export const nav = [

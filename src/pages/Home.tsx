@@ -204,7 +204,7 @@ function PortfolioSection() {
     const trackEl = track.current
     if (!pinEl || !trackEl) return
     const mm = gsap.matchMedia()
-    mm.add('(min-width: 1001px) and (prefers-reduced-motion: no-preference)', () => {
+    mm.add('(min-width: 1001px) and (prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine)', () => {
       const distance = () => Math.max(0, trackEl.scrollWidth - window.innerWidth + 80)
       const move = gsap.to(trackEl, {
         x: () => -distance(),

@@ -289,3 +289,82 @@ html.has-custom-cursor :disabled {
     letter-spacing: 0.22em;
   }
 }
+
+/* ---- Cross-device polish ------------------------------------------------ */
+html {
+  -webkit-tap-highlight-color: transparent;
+}
+a,
+button,
+[role='button'],
+label {
+  touch-action: manipulation; /* no double-tap-zoom delay on taps */
+}
+
+/* iOS < 16 / old Android WebView: no overflow: clip → hidden on body only */
+@supports not (overflow: clip) {
+  html {
+    overflow-x: visible;
+  }
+  body {
+    overflow-x: hidden;
+  }
+}
+
+.app-error {
+  min-height: 80vh;
+  min-height: 80svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.2rem;
+  padding: calc(var(--nav-h) + 2rem) var(--gutter) 3rem;
+  max-width: 44rem;
+  margin: 0 auto;
+}
+.app-error__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+.app-error__btn {
+  min-height: 48px;
+  padding: 0 1.4rem;
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--r-pill);
+  background: var(--grad-accent);
+  color: #1a0a00;
+  font-weight: 600;
+}
+.app-error__btn--ghost {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--c-text);
+  border: 1px solid var(--glass-border-hi);
+}
+
+/* Phones: drop the costly layers (full-screen grain, stacked backdrop blurs)
+   that cause scroll jank on mid-range Android and older iPhones. */
+@media (max-width: 760px) {
+  .grain {
+    display: none;
+  }
+  .gcard,
+  .rail,
+  .contact__console-inner,
+  .pcard__badge,
+  .pcard__index,
+  .pcard__arrow,
+  .svc-index__link,
+  .habout__role {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+  .gcard,
+  .contact__console-inner {
+    background: linear-gradient(150deg, rgba(24, 29, 44, 0.96), rgba(10, 13, 21, 0.96));
+  }
+  .rail {
+    background: linear-gradient(150deg, rgba(28, 33, 48, 0.94), rgba(10, 13, 21, 0.94));
+  }
+}

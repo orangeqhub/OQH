@@ -20,7 +20,10 @@ const tier = device.tier
 const DARK = new THREE.Color('#05070b')
 const BRIGHT = new THREE.Color('#1b2230')
 
-export default function StudioCanvas() {
+/** Phones / low-end GPUs render at ~30fps: half the heat and battery, no visible loss for a slow ambient scene. */
+const capFps = tier === 'low' && !device.reducedMotion
+
+export default function StudioCanvas({ onContextLost }: { onContextLost?: () => void }) {
   const [dpr, setDpr] = useState(tier === 'high' ? 1.5 : tier === 'mid' ? 1.25 : 1)
 
   return (
@@ -28,8 +31,18 @@ export default function StudioCanvas() {
       dpr={dpr}
       gl={{ antialias: tier !== 'low', powerPreference: 'high-performance', alpha: false, stencil: false }}
       camera={{ fov: 42, near: 0.1, far: 90, position: homePath[0].pos }}
-      frameloop={device.reducedMotion ? 'demand' : 'always'}
+      frameloop={device.reducedMotion || capFps ? 'demand' : 'always'}
       onCreated={({ gl, scene }) => {
+        // Mobile browsers can drop the GPU context (backgrounded tab, memory
+        // pressure). Let the parent rebuild the canvas instead of leaving it black.
+        gl.domElement.addEventListener(
+          'webglcontextlost',
+          (e) => {
+            e.preventDefault()
+            onContextLost?.()
+          },
+          { once: true },
+        )
         gl.toneMapping = THREE.ACESFilmicToneMapping
         gl.toneMappingExposure = 1.05
         scene.background = DARK.clone()
@@ -37,6 +50,7 @@ export default function StudioCanvas() {
       }}
     >
       <PerformanceMonitor onDecline={() => setDpr(1)} />
+      {capFps && <FrameCap fps={30} />}
       <CameraRig />
       <Lighting />
       <Floor />
@@ -53,6 +67,25 @@ export default function StudioCanvas() {
 }
 
 /* -------------------------------------------------------------------------- */
+
+/** Drives an on-demand canvas at a fixed rate; stops while the tab is hidden. */
+function FrameCap({ fps }: { fps: number }) {
+  const invalidate = useThree((s) => s.invalidate)
+  useEffect(() => {
+    let raf = 0
+    let last = 0
+    const step = 1000 / fps
+    const loop = (t: number) => {
+      raf = requestAnimationFrame(loop)
+      if (document.hidden || t - last < step - 2) return
+      last = t
+      invalidate()
+    }
+    raf = requestAnimationFrame(loop)
+    return () => cancelAnimationFrame(raf)
+  }, [fps, invalidate])
+  return null
+}
 
 const tmpPos = new THREE.Vector3()
 const tmpTarget = new THREE.Vector3()
@@ -320,11 +353,17 @@ function Signage() {
   )
 }
 
+/** Colour-correct + sharpen image textures once, as they load. */
+function prepTexture(t: THREE.Texture | THREE.Texture[]) {
+  for (const tex of Array.isArray(t) ? t : [t]) {
+    tex.colorSpace = THREE.SRGBColorSpace
+    tex.anisotropy = 8
+  }
+}
+
 /** Backlit brand sign: the official logo on the wall with a soft warm halo. */
 function LogoSign() {
-  const tex = useTexture('/brand/oqh-logo-on-dark.png')
-  tex.colorSpace = THREE.SRGBColorSpace
-  tex.anisotropy = 8
+  const tex = useTexture('/brand/oqh-logo-on-dark.png', prepTexture)
   const w = 3.4
   const h = w * (407 / 570)
   return (
@@ -380,9 +419,7 @@ function GalleryWall() {
 
 /** A wall display showing a real client-site screenshot. */
 function ShotScreen({ url }: { url: string }) {
-  const tex = useTexture(url)
-  tex.colorSpace = THREE.SRGBColorSpace
-  tex.anisotropy = 8
+  const tex = useTexture(url, prepTexture)
   return (
     <mesh>
       <planeGeometry args={[3, 1.8]} />

@@ -4,6 +4,10 @@ import './styles/tokens.css'
 import './styles/base.css'
 import App from './App'
 
+// The app manages scroll itself (page transitions reset to top); stop the
+// browser restoring an old position underneath and causing a jump.
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual'
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <App />

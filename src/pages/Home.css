@@ -268,12 +268,10 @@
   .hero__title {
     font-size: clamp(2.1rem, 1rem + 5.6vw, 3.2rem);
   }
-  .hero__ctas > * {
-    flex: 1 1 100%;
-  }
-  .hero__ctas .pbtn {
-    width: 100%;
-    justify-content: space-between;
+  /* natural-width CTAs leave a lane on the right for the floating WhatsApp/call buttons */
+  .hero__ctas {
+    flex-direction: column;
+    align-items: flex-start;
   }
   .hero__strip {
     grid-template-columns: 1fr 1fr;
@@ -418,7 +416,7 @@
   padding: 3rem 0;
 }
 
-@media (max-width: 1000px), (prefers-reduced-motion: reduce) {
+@media (max-width: 1000px), (prefers-reduced-motion: reduce), (hover: none), (pointer: coarse) {
   .hport__pin {
     min-height: auto;
     padding-block: var(--space-section);

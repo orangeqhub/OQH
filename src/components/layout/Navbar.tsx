@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
-import { nav } from '../../data/site'
+import { nav, whatsappGreeting, whatsappHref } from '../../data/site'
 import { Logo } from '../ui/Logo'
 import { Icon } from '../ui/Icon'
 import { PremiumButton } from '../ui/PremiumButton'
@@ -75,7 +75,7 @@ export function Navbar() {
           </nav>
 
           <div className="nav__actions">
-            <PremiumButton to="/contact" variant="ghost" icon="arrow-right" className="nav__cta">
+            <PremiumButton href={whatsappHref(whatsappGreeting)} variant="ghost" icon="arrow-right" className="nav__cta">
               Let&apos;s Talk
             </PremiumButton>
             <button

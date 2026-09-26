@@ -1,7 +1,7 @@
 import { useId, useState, type FormEvent } from 'react'
-import { contact, services } from '../../data/site'
+import { services, whatsappHref } from '../../data/site'
 import { PremiumButton } from './PremiumButton'
-import { Icon } from './Icon'
+import { WhatsAppGlyph } from './WhatsAppGlyph'
 import './ContactForm.css'
 
 type Topic = 'project' | 'careers'
@@ -17,15 +17,15 @@ interface Values {
   website: string // honeypot
 }
 
-type Status = { kind: 'idle' } | { kind: 'sending' } | { kind: 'sent' } | { kind: 'mailto' } | { kind: 'error'; message: string }
+type Status = { kind: 'idle' } | { kind: 'opened'; url: string }
 
 const empty: Values = { name: '', email: '', company: '', service: '', budget: '', message: '', link: '', website: '' }
 const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
 
 /**
- * Delivery order: VITE_CONTACT_ENDPOINT (JSON POST) → VITE_CONTACT_EMAIL
- * (opens the visitor's mail client) → an honest "not configured" error.
- * It never pretends a message was sent.
+ * Submitting opens WhatsApp — a chat with the business number with every filled
+ * field pre-typed. The visitor still taps "Send" inside WhatsApp (a website
+ * can't send on their behalf), and the success state says so honestly.
  */
 export function ContactForm({ topic = 'project', disciplines }: { topic?: Topic; disciplines?: string[] }) {
   const uid = useId()
@@ -41,14 +41,33 @@ export function ContactForm({ topic = 'project', disciplines }: { topic?: Topic;
   function validate(v: Values) {
     const er: Partial<Record<keyof Values, string>> = {}
     if (!v.name.trim()) er.name = 'Please tell us your name.'
-    if (!v.email.trim()) er.email = 'We need an email address to reply.'
-    else if (!emailRe.test(v.email.trim())) er.email = 'That email address doesn’t look right.'
+    if (v.email.trim() && !emailRe.test(v.email.trim())) er.email = 'That email address doesn’t look right.'
     if (v.message.trim().length < 10) er.message = 'A few more words, please (at least 10 characters).'
     if (v.link && !/^https?:\/\/\S+$/i.test(v.link.trim())) er.link = 'Links should start with http:// or https://'
     return er
   }
 
-  async function onSubmit(e: FormEvent<HTMLFormElement>) {
+  function buildMessage(v: Values) {
+    const t = (x: string) => x.trim()
+    // null = field left empty (skipped); '' = intentional blank line
+    const lines: (string | null)[] = [
+      topic === 'careers' ? '*Job application — via Orange Quantum Hub website*' : '*New project enquiry — via Orange Quantum Hub website*',
+      '',
+      `Name: ${t(v.name)}`,
+      t(v.email) ? `Email: ${t(v.email)}` : null,
+      t(v.company) ? `Company: ${t(v.company)}` : null,
+      v.service ? `${topic === 'careers' ? 'Discipline' : 'Interested in'}: ${v.service}` : null,
+      v.budget ? `Budget: ${v.budget}` : null,
+      t(v.link) ? `Portfolio: ${t(v.link)}` : null,
+      '',
+      topic === 'careers' ? 'About me:' : 'Project details:',
+      t(v.message),
+    ]
+    return lines.filter((l): l is string => l !== null).join('\n')
+  }
+
+  // Must stay synchronous: window.open is only allowed inside the click/submit gesture.
+  function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
     if (values.website) return // bot
     const er = validate(values)
@@ -58,71 +77,34 @@ export function ContactForm({ topic = 'project', disciplines }: { topic?: Topic;
       document.getElementById(`${uid}-${firstBad}`)?.focus()
       return
     }
-
-    const payload = {
-      topic,
-      name: values.name.trim(),
-      email: values.email.trim(),
-      company: values.company.trim(),
-      service: values.service,
-      budget: values.budget,
-      link: values.link.trim(),
-      message: values.message.trim(),
-    }
-
-    if (contact.endpoint) {
-      setStatus({ kind: 'sending' })
-      try {
-        const res = await fetch(contact.endpoint, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-          body: JSON.stringify(payload),
-        })
-        if (!res.ok) throw new Error(`HTTP ${res.status}`)
-        setStatus({ kind: 'sent' })
-        setValues(empty)
-      } catch (err) {
-        console.error('[contact] submit failed', err)
-        setStatus({ kind: 'error', message: 'Your message couldn’t be sent. Please try again in a moment.' })
-      }
-      return
-    }
-
-    if (contact.email) {
-      const subject = topic === 'careers' ? `Careers — ${payload.service || 'Open application'}` : `Project enquiry — ${payload.service || 'General'}`
-      const header = [
-        `Name: ${payload.name}`,
-        `Email: ${payload.email}`,
-        payload.company && `Company: ${payload.company}`,
-        payload.service && `${topic === 'careers' ? 'Discipline' : 'Service'}: ${payload.service}`,
-        payload.budget && `Budget: ${payload.budget}`,
-        payload.link && `Link: ${payload.link}`,
-      ].filter(Boolean)
-      const body = `${header.join('\n')}\n\n${payload.message}`
-      window.location.href = `mailto:${contact.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
-      setStatus({ kind: 'mailto' })
-      return
-    }
-
-    console.warn('[contact] No delivery channel configured. Set VITE_CONTACT_ENDPOINT or VITE_CONTACT_EMAIL (see .env.example).')
-    setStatus({ kind: 'error', message: 'Online messaging isn’t available yet. Please try again later.' })
+    const url = whatsappHref(buildMessage(values))
+    // Don't pass 'noopener' as a window feature: browsers then always return null,
+    // which would look like a blocked popup and open WhatsApp a second time.
+    const win = window.open(url, '_blank')
+    if (win) win.opener = null
+    else window.location.href = url // popup blocked (or in-app browser): open in this tab
+    setStatus({ kind: 'opened', url })
   }
 
-  if (status.kind === 'sent' || status.kind === 'mailto') {
+  if (status.kind === 'opened') {
     return (
       <div className="cform__done" role="status">
-        <span className="cform__done-icon">
-          <Icon name="check" size={28} />
+        <span className="cform__done-icon cform__done-icon--wa">
+          <WhatsAppGlyph size={30} />
         </span>
-        <h3 className="h3">{status.kind === 'sent' ? 'Thank you — message received.' : 'Almost there.'}</h3>
+        <h3 className="h3">WhatsApp is ready with your message.</h3>
         <p className="muted">
-          {status.kind === 'sent'
-            ? 'We’ll get back to you at the email address you provided.'
-            : 'Your email app should have opened with your message ready — just press send.'}
+          Your details are filled in — just tap <strong>Send</strong> in WhatsApp and we’ll reply there. If WhatsApp didn’t open, use the
+          button below.
         </p>
-        <PremiumButton variant="ghost" icon="arrow-right" onClick={() => setStatus({ kind: 'idle' })}>
-          Send another message
-        </PremiumButton>
+        <div className="cform__actions">
+          <PremiumButton href={status.url} icon="arrow-up-right">
+            Open WhatsApp
+          </PremiumButton>
+          <PremiumButton variant="ghost" icon="arrow-right" onClick={() => setStatus({ kind: 'idle' })}>
+            Edit message
+          </PremiumButton>
+        </div>
       </div>
     )
   }
@@ -153,8 +135,8 @@ export function ContactForm({ topic = 'project', disciplines }: { topic?: Topic;
           {err('name')}
         </div>
         <div className="cform__field">
-          <label htmlFor={`${uid}-email`}>Email *</label>
-          <input {...field('email')} type="email" autoComplete="email" required />
+          <label htmlFor={`${uid}-email`}>Email (optional)</label>
+          <input {...field('email')} type="email" autoComplete="email" />
           {err('email')}
         </div>
       </div>
@@ -214,17 +196,14 @@ export function ContactForm({ topic = 'project', disciplines }: { topic?: Topic;
         <input {...field('website')} tabIndex={-1} autoComplete="off" />
       </div>
 
-      {status.kind === 'error' && (
-        <p className="cform__alert" role="alert">
-          {status.message}
-        </p>
-      )}
-
       <div className="cform__actions">
-        <PremiumButton type="submit" size="lg" disabled={status.kind === 'sending'}>
-          {status.kind === 'sending' ? 'Sending…' : topic === 'careers' ? 'Send application' : 'Send message'}
+        <PremiumButton type="submit" size="lg" icon="none">
+          <span className="cform__wa-ico" aria-hidden="true">
+            <WhatsAppGlyph size={18} />
+          </span>
+          {topic === 'careers' ? 'Send application on WhatsApp' : 'Send message on WhatsApp'}
         </PremiumButton>
-        <span className="cform__note muted">* Required fields</span>
+        <span className="cform__note muted">* Required · opens WhatsApp with your details</span>
       </div>
     </form>
   )

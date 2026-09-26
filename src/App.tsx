@@ -1,8 +1,10 @@
 import { useEffect } from 'react'
-import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Outlet, Route, Routes, useLocation } from 'react-router-dom'
+import { AppErrorBoundary } from './components/layout/AppErrorBoundary'
 import { SceneBackground } from './components/3d/SceneBackground'
 import { Navbar } from './components/layout/Navbar'
 import { CustomCursor } from './components/ui/CustomCursor'
+import { FloatingContact } from './components/ui/FloatingContact'
 import { PageTransition } from './components/animations/PageTransition'
 import { initSmoothScroll } from './lib/smoothScroll'
 import { listenPointer } from './lib/sceneStore'
@@ -17,6 +19,7 @@ import Contact from './pages/Contact'
 import NotFound from './pages/NotFound'
 
 function Layout() {
+  const { pathname } = useLocation()
   useEffect(() => {
     initSmoothScroll()
     listenPointer()
@@ -31,8 +34,11 @@ function Layout() {
       <div className="grain" aria-hidden="true" />
       <Navbar />
       <main id="main" tabIndex={-1}>
-        <Outlet />
+        <AppErrorBoundary key={pathname}>
+          <Outlet />
+        </AppErrorBoundary>
       </main>
+      <FloatingContact />
       <PageTransition />
       <CustomCursor />
     </>

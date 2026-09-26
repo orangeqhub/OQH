@@ -1,4 +1,4 @@
-import { Component, lazy, Suspense, useEffect, useState, type ReactNode } from 'react'
+import { Component, lazy, Suspense, useEffect, useRef, useState, type ReactNode } from 'react'
 import { hasWebGL } from '../../lib/device'
 import './SceneBackground.css'
 
@@ -13,6 +13,21 @@ const StudioCanvas = lazy(() => import('./StudioCanvas'))
 export function SceneBackground() {
   const [mount, setMount] = useState(false)
   const [ready, setReady] = useState(false)
+  // Bumped when the GPU context is lost, which remounts a fresh canvas.
+  const [generation, setGeneration] = useState(0)
+  const losses = useRef(0)
+
+  const handleContextLost = () => {
+    setReady(false)
+    losses.current += 1
+    // Give the browser a moment to free the old context; after 3 losses stop
+    // retrying and leave the painted CSS studio in place.
+    if (losses.current > 3) {
+      setMount(false)
+      return
+    }
+    setTimeout(() => setGeneration((g) => g + 1), 600)
+  }
 
   useEffect(() => {
     if (!hasWebGL()) return
@@ -28,11 +43,11 @@ export function SceneBackground() {
       {mount && (
         <SceneErrorBoundary>
           <Suspense fallback={null}>
-            <div className={`scene__canvas ${ready ? 'is-ready' : ''}`} ref={(el) => {
+            <div key={generation} className={`scene__canvas ${ready ? 'is-ready' : ''}`} ref={(el) => {
                 if (el) requestAnimationFrame(() => setReady(true))
               }}
             >
-              <StudioCanvas />
+              <StudioCanvas key={generation} onContextLost={handleContextLost} />
             </div>
           </Suspense>
         </SceneErrorBoundary>

@@ -179,3 +179,13 @@
     grid-template-columns: 1fr;
   }
 }
+
+.cform__wa-ico {
+  display: inline-grid;
+  margin-right: 0.15rem;
+}
+.cform__done-icon--wa {
+  background: #25d366;
+  color: #fff;
+  box-shadow: 0 12px 40px -10px rgba(37, 211, 102, 0.7);
+}

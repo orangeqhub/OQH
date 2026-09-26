@@ -2,6 +2,7 @@
   position: relative;
   z-index: var(--z-content);
   min-height: min(92vh, 980px);
+  min-height: min(92svh, 980px);
   display: flex;
   align-items: center;
   padding-top: calc(var(--nav-h) + var(--space-7));

@@ -1,5 +1,6 @@
 import { useRef } from 'react'
-import { contact, process } from '../data/site'
+import { contact, phoneHref, process, whatsappGreeting, whatsappHref } from '../data/site'
+import { WhatsAppGlyph } from '../components/ui/WhatsAppGlyph'
 import { useScenePreset } from '../hooks/useScenePreset'
 import { useParallaxLayers } from '../hooks/useParallaxLayers'
 import { PageHero } from '../components/layout/PageHero'
@@ -20,7 +21,7 @@ export default function Contact() {
       <PageHero
         eyebrow="Contact"
         lines={['Let’s talk about', <>your <span className="accent-text">next move.</span></>]}
-        lead="Tell us what you’re planning — a new product, a redesign, a campaign or a video. We’ll reply with next steps."
+        lead="Tell us what you’re planning — a new product, a redesign, a campaign or a video. Your message opens straight in WhatsApp, and we’ll reply there."
       />
 
       <section className="section section--tight">
@@ -31,7 +32,7 @@ export default function Contact() {
             </Reveal>
             <Reveal variant="rise" stagger={0.08} as="ol" className="contact__steps">
               {[
-                'We read your message and ask any questions we need.',
+                'You send your details on WhatsApp — we read them and ask anything we need.',
                 'We suggest an approach, timeline and estimate.',
                 `Then we ${process[0].title.toLowerCase()}, ${process[1].title.toLowerCase()} and ${process[2].title.toLowerCase()} — together.`,
               ].map((t, i) => (
@@ -42,32 +43,42 @@ export default function Contact() {
               ))}
             </Reveal>
 
-            {(contact.email || contact.phone || contact.address) && (
-              <Reveal variant="rise" as="ul" className="contact__channels">
-                {contact.email && (
-                  <li>
+            <Reveal variant="rise" as="ul" className="contact__channels">
+              <li>
+                <span className="contact__ch-ico contact__ch-ico--wa">
+                  <WhatsAppGlyph size={20} />
+                </span>
+                <a href={whatsappHref(whatsappGreeting)} target="_blank" rel="noopener noreferrer" data-cursor="hover">
+                  Chat on WhatsApp
+                </a>
+              </li>
+              <li>
+                <span className="contact__ch-ico">
+                  <Icon name="phone" />
+                </span>
+                <a href={phoneHref} data-cursor="hover">
+                  {contact.phone}
+                </a>
+              </li>
+              {contact.email && (
+                <li>
+                  <span className="contact__ch-ico">
                     <Icon name="mail" />
-                    <a href={`mailto:${contact.email}`} data-cursor="hover">
-                      {contact.email}
-                    </a>
-                  </li>
-                )}
-                {contact.phone && (
-                  <li>
-                    <Icon name="phone" />
-                    <a href={`tel:${contact.phone.replace(/\s+/g, '')}`} data-cursor="hover">
-                      {contact.phone}
-                    </a>
-                  </li>
-                )}
-                {contact.address && (
-                  <li>
+                  </span>
+                  <a href={`mailto:${contact.email}`} data-cursor="hover">
+                    {contact.email}
+                  </a>
+                </li>
+              )}
+              {contact.address && (
+                <li>
+                  <span className="contact__ch-ico">
                     <Icon name="pin" />
-                    <span>{contact.address}</span>
-                  </li>
-                )}
-              </Reveal>
-            )}
+                  </span>
+                  <span>{contact.address}</span>
+                </li>
+              )}
+            </Reveal>
           </div>
 
           <div className="contact__stage-wrap">
